@@ -6,6 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.chan.android_lab9.model.Detail;
+import com.chan.android_lab9.model.Github;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,5 +71,43 @@ public abstract class CommonAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.mOnItemClickListener=onItemClickListener;
+    }
+
+    public void addData(Github github){
+        HashMap<String, Object> temp = new HashMap<>();
+        temp.put("name", github.getLogin());
+        temp.put("id", "id："+github.getId());
+        temp.put("blog", "blog:"+github.getBlog());
+        mDatas.add(temp);
+        notifyDataSetChanged();
+    }
+    public void addData(Detail d){
+        HashMap<String, Object> temp = new HashMap<>();
+        temp.put("name", d.getName());
+        temp.put("language", clipString(d.getLanguage(), 20));
+        temp.put("description", clipString(d.getDescription(), 20));
+        mDatas.add(temp);
+        notifyDataSetChanged();
+    }
+    public String getName(int pos){
+        return mDatas.get(pos).get("name").toString();
+    }
+
+    public void removeData(int pos){
+        mDatas.remove(pos);
+        notifyDataSetChanged();
+    }
+    public void clearData(){
+        mDatas.removeAll(mDatas);
+        notifyDataSetChanged();
+    }
+    private String clipString(String s, int limit){
+        String res = s;
+        if(s == null){
+            s = "";
+        }else if(s.length() > limit){
+            res = s.substring(0, limit) + "...";
+        }
+        return res;
     }
 }

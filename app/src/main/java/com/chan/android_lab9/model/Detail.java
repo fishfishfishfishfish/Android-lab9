@@ -6,18 +6,18 @@ package com.chan.android_lab9.model;
 
 public class Detail {
     private String name;
-    private String lang;
-    private String describe;
+    private String language;
+    private String description;
 
     public String getName() {
         return name;
     }
 
-    public String getLang() {
-        return lang;
+    public String getLanguage() {
+        return language;
     }
 
-    public String getDescribe() {
-        return describe;
+    public String getDescription() {
+        return description;
     }
 }

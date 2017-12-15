@@ -104,7 +104,7 @@ public abstract class CommonAdapter extends RecyclerView.Adapter<ViewHolder> {
     private String clipString(String s, int limit){
         String res = s;
         if(s == null){
-            s = "";
+            res = "";
         }else if(s.length() > limit){
             res = s.substring(0, limit) + "...";
         }

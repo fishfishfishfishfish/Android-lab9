@@ -112,11 +112,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String User = searchEdit.getText().toString();
-                SharedPreferences.Editor SPEdit = SP.edit();
-                SPEdit.putString(Integer.toString(cntLogin), User);
-                cntLogin += 1;
-                SPEdit.putString("cntLogin", Integer.toString(cntLogin));
-                SPEdit.commit();
                 waitPrograss.setVisibility(View.VISIBLE);
                 githubservice.getUser(User)
                         .subscribeOn(Schedulers.newThread())
@@ -136,6 +131,11 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onNext(Github github) {
                                 GithubAdapter.addData(github);
+                                SharedPreferences.Editor SPEdit = SP.edit();
+                                SPEdit.putString(Integer.toString(cntLogin), github.getLogin());
+                                cntLogin += 1;
+                                SPEdit.putString("cntLogin", Integer.toString(cntLogin));
+                                SPEdit.commit();
                             }
                         });
             }

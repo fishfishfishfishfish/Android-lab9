@@ -86,11 +86,13 @@ public abstract class CommonAdapter extends RecyclerView.Adapter<ViewHolder> {
         temp.put("name", d.getName());
         temp.put("language", clipString(d.getLanguage(), 20));
         temp.put("description", clipString(d.getDescription(), 20));
+        temp.put("html_url", d.getHtml_url());
         mDatas.add(temp);
         notifyDataSetChanged();
     }
-    public String getName(int pos){
-        return mDatas.get(pos).get("name").toString();
+
+    public String getData(int pos, String tag){
+        return mDatas.get(pos).get(tag).toString();
     }
 
     public void removeData(int pos){

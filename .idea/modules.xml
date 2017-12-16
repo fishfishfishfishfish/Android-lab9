@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Androidlab9.iml" filepath="$PROJECT_DIR$/Androidlab9.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Android-lab9.iml" filepath="$PROJECT_DIR$/Android-lab9.iml" />
+      <module fileurl="file://C:\Users\61915\AndroidStudioProjects\Android-lab9\Androidlab9.iml" filepath="C:\Users\61915\AndroidStudioProjects\Android-lab9\Androidlab9.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

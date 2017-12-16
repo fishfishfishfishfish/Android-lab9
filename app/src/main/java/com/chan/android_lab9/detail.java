@@ -1,5 +1,7 @@
 package com.chan.android_lab9;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -63,6 +65,21 @@ public class detail extends AppCompatActivity {
             }
         };
         detailList.setAdapter(DetailAdapter);
+        DetailAdapter.setOnItemClickListener(new CommonAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                Intent intent = new Intent();
+                intent.setAction("android.intent.action.VIEW");
+                Uri content_url = Uri.parse(DetailAdapter.getData(position, "html_url"));
+                intent.setData(content_url);
+                startActivity(intent);
+            }
+
+            @Override
+            public boolean onLongClick(int position) {
+                return false;
+            }
+        });
 
 
         githubService.getUserRepos(loginName)

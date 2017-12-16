@@ -8,6 +8,7 @@ public class Detail {
     private String name;
     private String language;
     private String description;
+    private String html_url;
 
     public String getName() {
         return name;
@@ -19,5 +20,9 @@ public class Detail {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getHtml_url() {
+        return html_url;
     }
 }

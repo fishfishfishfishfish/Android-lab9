@@ -1,6 +1,7 @@
 package com.chan.android_lab9;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,6 +35,9 @@ import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
+    SharedPreferences SP;
+    public static int MODE = MODE_PRIVATE;
+    public static String PREFERENCE_NAME = "SaveLogin";
     EditText searchEdit;
     Button clearBtn;
     Button fetchBtn;
@@ -42,10 +46,19 @@ public class MainActivity extends AppCompatActivity {
     List<Map<String, Object>> GithubList = new ArrayList<>();
     CommonAdapter GithubAdapter;
     private GithubService githubservice;
+    private int cntLogin = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        SP = getSharedPreferences(PREFERENCE_NAME, MODE);
+        if(SP.getString("cntLogin","").equals("")){
+            SharedPreferences.Editor SPEdit = SP.edit();
+            SPEdit.putString("cntLogin", Integer.toString(0));
+            SPEdit.commit();
+        }else{
+            cntLogin = Integer.parseInt(SP.getString("cntLogin", "0"));
+        }
 
         searchEdit = findViewById(R.id.searchEdit);
         clearBtn = findViewById(R.id.clearBtn);
@@ -73,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(int position) {
                 Intent intent = new Intent(MainActivity.this, detail.class);
-                intent.putExtra("name", GithubAdapter.getName(position));
+                intent.putExtra("name", GithubAdapter.getData(position, "name"));
                 startActivity(intent);
             }
 
@@ -84,16 +97,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        init_List();
         clearBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 GithubAdapter.clearData();
+                SharedPreferences.Editor SPEdit = SP.edit();
+                cntLogin = 0;
+                SPEdit.clear();
+                SPEdit.commit();
             }
         });
         fetchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String User = searchEdit.getText().toString();
+                SharedPreferences.Editor SPEdit = SP.edit();
+                SPEdit.putString(Integer.toString(cntLogin), User);
+                cntLogin += 1;
+                SPEdit.putString("cntLogin", Integer.toString(cntLogin));
+                SPEdit.commit();
                 waitPrograss.setVisibility(View.VISIBLE);
                 githubservice.getUser(User)
                         .subscribeOn(Schedulers.newThread())
@@ -118,4 +141,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }//end onCreate
+
+    void init_List(){
+        for(int i = 0; i < cntLogin; i++){
+            String User = SP.getString(Integer.toString(i), "");
+            waitPrograss.setVisibility(View.VISIBLE);
+            githubservice.getUser(User)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<Github>() {
+                        @Override
+                        public void onCompleted() {
+                            waitPrograss.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Toast.makeText(MainActivity.this, e.getMessage()+"确认你搜索的用户存在", Toast.LENGTH_LONG).show();
+                            waitPrograss.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onNext(Github github) {
+                            GithubAdapter.addData(github);
+                        }
+                    });
+        }
+    }
 }
